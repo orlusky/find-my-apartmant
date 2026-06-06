@@ -17,9 +17,8 @@ facebook:
 yad2:
   enabled: true
   search_urls:
-    - https://www.yad2.co.il/realestate/rent/tel-aviv-area?maxPrice=9000&minRooms=3&maxRooms=4.5&property=1&area=1&city=5000&neighborhood=1518&bBox=32.089599%2C34.793162%2C32.096293%2C34.803519&zoom=16
-    - https://www.yad2.co.il/realestate/rent/tel-aviv-area?maxPrice=9000&minRooms=3&maxRooms=4.5&property=1&zoom=15&area=3&city=8600&neighborhood=236&bBox=32.079712%2C34.798313%2C32.090170%2C34.814492
-    #- https://www.yad2.co.il/realestate/rent/tel-aviv-area?maxPrice=9000&minRooms=3&maxRooms=4.5&property=1&area=3&city=6300&neighborhood=355&bBox=32.076948%2C34.801001%2C32.085777%2C34.814659&zoom=15
+    - https://www.yad2.co.il/realestate/rent/tel-aviv-area?maxPrice=9000&minRooms=3&maxRooms=4.5&property=1&area=1&city=5000&neighborhood=1518
+    - https://www.yad2.co.il/realestate/rent/tel-aviv-area?maxPrice=9000&minRooms=3&maxRooms=4.5&property=1&area=3&city=8600&neighborhood=236
     - https://www.yad2.co.il/realestate/rent/tel-aviv-area?maxPrice=9000&minRooms=3&maxRooms=4.5&property=1&area=3&city=8600&neighborhood=327
 
 filters:
