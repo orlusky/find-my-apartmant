@@ -4,6 +4,7 @@ import type { Browser, BrowserContext } from 'playwright';
 import { AppConfig } from '../../config/Config';
 import { hasNotification, saveNotification } from '../../database/Database';
 import { sendNotification, ListingDetails } from '../../telegram/TelegramClient';
+import { matchesFilters } from '../../filters/KeywordFilter';
 import { withRetry } from '../../utils/retry';
 import { logger } from '../../utils/logger';
 
@@ -121,6 +122,13 @@ export async function scanYad2(config: AppConfig): Promise<void> {
         let pageNew = 0;
 
         for (const listing of listings) {
+          // Filter by location keywords using the extracted street + neighborhood text
+          const locationText = [listing.details.street, listing.details.info1].filter(Boolean).join(' ');
+          if (locationText && !matchesFilters(locationText, [config.filters.include_groups[0]], [], undefined)) {
+            logger.debug({ url: listing.url, locationText }, 'Yad2 listing filtered out by location');
+            continue;
+          }
+
           if (hasNotification(listing.id)) {
             totalSkipped++;
             continue;
