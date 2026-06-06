@@ -1,0 +1,26 @@
+services:
+  apartment-monitor:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/app/data
+      - ./.env:/app/.env:ro
+      - ./config.yaml:/app/config.yaml:ro
+    env_file:
+      - .env
+    environment:
+      - DATA_DIR=/app/data
+      - NODE_ENV=production
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('dns').resolve('facebook.com', (e) => process.exit(e ? 1 : 0))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s

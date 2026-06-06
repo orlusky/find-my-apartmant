@@ -1,0 +1,96 @@
+facebook:
+  enabled: true
+  groups:
+    - https://www.facebook.com/groups/1870209196564360/
+    - https://www.facebook.com/groups/253957624766723/
+    - https://www.facebook.com/groups/1431533310402418/
+    - https://www.facebook.com/groups/1424244737803677/
+    - https://www.facebook.com/groups/1774413905909921/
+    - https://www.facebook.com/groups/1068642559922565
+    - https://www.facebook.com/groups/170304031901994
+    - https://www.facebook.com/groups/1380680752778760
+    - https://www.facebook.com/groups/564985183576779
+    - https://www.facebook.com/groups/175757842565733
+    - https://www.facebook.com/groups/618612590371717
+    - https://www.facebook.com/groups/1456553661265604
+
+yad2:
+  enabled: true
+  search_urls:
+    - https://www.yad2.co.il/realestate/rent/tel-aviv-area?maxPrice=9000&minRooms=3&maxRooms=4.5&property=1&area=1&city=5000&neighborhood=1518&bBox=32.089599%2C34.793162%2C32.096293%2C34.803519&zoom=16
+    - https://www.yad2.co.il/realestate/rent/tel-aviv-area?maxPrice=9000&minRooms=3&maxRooms=4.5&property=1&zoom=15&area=3&city=8600&neighborhood=236&bBox=32.079712%2C34.798313%2C32.090170%2C34.814492
+    #- https://www.yad2.co.il/realestate/rent/tel-aviv-area?maxPrice=9000&minRooms=3&maxRooms=4.5&property=1&area=3&city=6300&neighborhood=355&bBox=32.076948%2C34.801001%2C32.085777%2C34.814659&zoom=15
+    - https://www.yad2.co.il/realestate/rent/tel-aviv-area?maxPrice=9000&minRooms=3&maxRooms=4.5&property=1&area=3&city=8600&neighborhood=327
+
+filters:
+  # ALL groups must match (AND between groups, OR within each group)
+  include_groups:
+
+    # Group 1: location
+    - - חרוזים
+      - אנה פרנק
+      - המלאכה
+      - ידע עם
+      - ברוריה
+      - חביבה רייק
+      - רחובות הנהר
+      - איתמר
+      - יואב
+      - אסף
+      - תל בנימין
+      - ביאליק
+      - אלונים
+      - אלעזר ויינשל
+      - מקדונלד
+      - הרי הגלעד
+      - היוזמה
+      - בבלי
+      - סנהדרין
+      - הרב קוסובסקי
+      - בן סירא
+      - הזוהר
+      - אונקלוס
+      - הרב הרצוג
+      - גבעת עמל
+      - תוספתא
+      - הכנסת הגדולה
+      - המשנה
+      - חנה זמר
+      - הרב ניסים
+      - הנשיאים
+      - בורוכוב
+      #- עיר גנים
+      #- דב פרידמן
+      #- תרע"ד
+      #- הראשונים
+     # - אחדות העבודה
+      #- ערבי נחל
+     # - עליית הנוער
+     # - צבי
+
+    # Group 2: must mention 3–4 rooms
+    - [3 חדרים, 3.5 חדרים, 4 חדרים, "3 חד'", "4 חד'", "3.5 חד'"]
+
+    # Group 3: must be a rental post
+    - [להשכרה, מתפנה, מחליפים, פנויה, לשכירות]
+
+    # Group 4: must include parking
+    #- [חניה, חנייה, מקום חניה]
+
+  # Price filter — Facebook only (Yad2 filters by URL)
+  price:
+    min: 3000
+    max: 9000
+
+  exclude_keywords:
+    - שותפ       # covers שותף / שותפים / שותפות
+    - אין חניה
+    - ללא חניה
+    - בלי חניה
+    - עבודה
+    - דרושים
+    - מכירה
+    - למכירה
+
+scheduler:
+  interval_minutes: 5
