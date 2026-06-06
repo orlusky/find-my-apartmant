@@ -1,7 +1,7 @@
 services:
   apartment-monitor:
     build: .
-    restart: unless-stopped
+    restart: always
     ports:
       - "3000:3000"
     volumes:
