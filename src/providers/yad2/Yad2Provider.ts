@@ -51,7 +51,10 @@ function parseInfo1(info1: string): { propertyType?: string; neighborhood?: stri
 
 function toAd(raw: RawListing): PropertyAd {
   const { propertyType, neighborhood, city } = parseInfo1(raw.info1);
-  const combined = `${raw.street} ${raw.info1} ${raw.info2} ${raw.price}`;
+  // Yad2 listings come from the /rent/ section, so they are inherently rentals.
+  // The card text never says "להשכרה", so we add it to satisfy rental-intent
+  // gates (required_any) that exist mainly to filter Facebook's mixed content.
+  const combined = `${raw.street} ${raw.info1} ${raw.info2} ${raw.price} להשכרה`;
   return {
     source: 'yad2',
     externalId: extractId(raw.url),

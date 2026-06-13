@@ -27,17 +27,15 @@ yad2:
 profiles:
   - name: ramat-gan-rental
     enabled: true
-    threshold: 40
+    threshold: 50
     locations:
       cities:
         - רמת גן
-        - גבעתיים
+        - תל אביב
       neighborhoods:
         - חרוזים
         - תל בנימין
         - בבלי
-        - בורוכוב
-        - גבעת עמל
       streets:
         - אנה פרנק
         - המלאכה
