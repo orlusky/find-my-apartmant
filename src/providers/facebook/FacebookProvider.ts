@@ -2,9 +2,9 @@ import { chromium, Browser, BrowserContext } from 'playwright';
 import * as path from 'path';
 import * as fs from 'fs';
 import { AppConfig, getDataDir } from '../../config/Config';
-import { matchesFilters, matchedKeywords } from '../../filters/KeywordFilter';
-import { hasNotification, saveNotification } from '../../database/Database';
-import { sendNotification } from '../../telegram/TelegramClient';
+import { PropertyAd } from '../../models/PropertyAd';
+import { processAd } from '../../matching/process';
+import { extractPrice, extractRooms, extractSize } from '../../matching/features';
 import { withRetry } from '../../utils/retry';
 import { logger } from '../../utils/logger';
 
@@ -69,7 +69,26 @@ interface Post {
 
 function extractIdFromUrl(url: string): string {
   const segments = url.replace(/\/$/, '').split('/');
-  return `fb_${segments[segments.length - 1]}`;
+  return segments[segments.length - 1];
+}
+
+/** Build a PropertyAd from a free-text Facebook post. Location matching relies
+ *  on the scoring engine scanning rawText; price/rooms/size parsed for display. */
+function postToAd(post: Post): PropertyAd {
+  const firstLine = post.text.split('\n').map(s => s.trim()).filter(Boolean)[0] ?? 'Facebook post';
+  return {
+    source: 'facebook',
+    externalId: post.id,
+    url: post.url,
+    title: firstLine.slice(0, 80),
+    description: post.text,
+    price: extractPrice(post.text) ?? undefined,
+    rooms: extractRooms(post.text) ?? undefined,
+    sizeSqm: extractSize(post.text) ?? undefined,
+    collectedAt: new Date(),
+    imageUrls: [],
+    metadata: { rawText: post.text },
+  };
 }
 
 async function scrapeGroupPage(
@@ -174,8 +193,7 @@ export async function scanFacebookGroups(config: AppConfig): Promise<void> {
   logger.info('Facebook scan started');
 
   const context = await getFacebookContext();
-  let totalMatches = 0;
-  let totalSkipped = 0;
+  let notified = 0, skipped = 0, rejected = 0;
 
   for (const groupUrl of config.facebook.groups) {
     logger.info({ groupUrl }, 'Scanning group');
@@ -188,39 +206,18 @@ export async function scanFacebookGroups(config: AppConfig): Promise<void> {
         `facebook:${groupUrl}`
       );
 
-      let groupNew = 0;
-
       for (const post of posts) {
-        if (
-          !matchesFilters(
-            post.text,
-            config.filters.include_groups,
-            config.filters.exclude_keywords,
-            config.filters.price
-          )
-        ) {
-          continue;
-        }
-
-        const matched = matchedKeywords(post.text, config.filters.include_groups);
-        logger.info({ url: post.url, matchedKeywords: matched }, 'Post matched filters');
-
-        if (hasNotification(post.id)) {
-          totalSkipped++;
-          continue;
-        }
-
-        await sendNotification('Facebook', post.url);
-        saveNotification(post.id, 'Facebook', post.url);
-        groupNew++;
-        totalMatches++;
+        const outcome = await processAd(postToAd(post));
+        if (outcome.notified) notified++;
+        else if (outcome.skipped) skipped++;
+        else rejected++;
       }
 
-      logger.info({ groupUrl, scanned: posts.length, sent: groupNew }, 'Group scan complete');
+      logger.info({ groupUrl, scanned: posts.length }, 'Group scan complete');
     } catch (err) {
       logger.error({ groupUrl, err }, 'Failed to scan Facebook group');
     }
   }
 
-  logger.info({ totalMatches, totalSkipped }, 'Facebook scan finished');
+  logger.info({ notified, skipped, rejected }, 'Facebook scan finished');
 }

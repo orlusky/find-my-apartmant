@@ -21,8 +21,76 @@ yad2:
     - https://www.yad2.co.il/realestate/rent/tel-aviv-area?maxPrice=9000&minRooms=3&maxRooms=4.5&property=1&area=3&city=8600&neighborhood=236
     - https://www.yad2.co.il/realestate/rent/tel-aviv-area?maxPrice=9000&minRooms=3&maxRooms=4.5&property=1&area=3&city=8600&neighborhood=327
 
+# ── Search profiles (new scoring engine) ───────────────────────────────
+# Each enabled profile scores every ad and notifies when score >= threshold.
+# `locations` = any hit passes the location gate; `required_any` = AND of ORs.
+profiles:
+  - name: ramat-gan-rental
+    enabled: true
+    threshold: 40
+    locations:
+      cities:
+        - רמת גן
+        - גבעתיים
+      neighborhoods:
+        - חרוזים
+        - תל בנימין
+        - בבלי
+        - בורוכוב
+        - גבעת עמל
+      streets:
+        - אנה פרנק
+        - המלאכה
+        - ידע עם
+        - ברוריה
+        - חביבה רייק
+        - רחובות הנהר
+        - איתמר
+        - יואב
+        - אסף
+        - ביאליק
+        - אלונים
+        - אלעזר ויינשל
+        - מקדונלד
+        - הרי הגלעד
+        - היוזמה
+        - סנהדרין
+        - הרב קוסובסקי
+        - בן סירא
+        - הזוהר
+        - אונקלוס
+        - הרב הרצוג
+        - תוספתא
+        - הכנסת הגדולה
+        - המשנה
+        - חנה זמר
+        - הרב ניסים
+        - הנשיאים
+    # Must read as a rental post (AND of ORs)
+    required_any:
+      - [להשכרה, מתפנה, מחליפים, פנויה, לשכירות]
+    preferred_keywords:
+      - משופצת
+      - מרפסת
+      - מעלית
+    exclude_keywords:
+      - שותפ
+      - אין חניה
+      - ללא חניה
+      - בלי חניה
+      - עבודה
+      - דרושים
+      - מכירה
+      - למכירה
+    price:
+      minimum: 3000
+      maximum: 9000
+    rooms:
+      minimum: 3
+      maximum: 4
+
+# ── Legacy filter block (ignored when `profiles` is present) ────────────
 filters:
-  # ALL groups must match (AND between groups, OR within each group)
   include_groups:
 
     # Group 1: location
